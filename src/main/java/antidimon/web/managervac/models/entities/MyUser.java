@@ -7,10 +7,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "users")
@@ -40,5 +41,6 @@ public class MyUser implements Serializable {
     private String password;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    private Timestamp createdAt;
 }

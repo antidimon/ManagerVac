@@ -5,9 +5,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.cglib.core.Local;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "tasks")
@@ -33,4 +36,8 @@ public class Comment implements Serializable {
 
     @Column(name = "comment", nullable = false)
     private String comment;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private Timestamp created_at;
 }

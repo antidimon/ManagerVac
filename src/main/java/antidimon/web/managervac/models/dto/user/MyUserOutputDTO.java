@@ -2,7 +2,8 @@ package antidimon.web.managervac.models.dto.user;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,5 +17,5 @@ public class MyUserOutputDTO {
     private String username;
     private String email;
     private String password;
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 }

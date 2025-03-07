@@ -6,7 +6,7 @@ import antidimon.web.managervac.models.enums.TaskPriority;
 import antidimon.web.managervac.models.enums.TaskStatus;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 @NoArgsConstructor
@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 public class TaskOutputDTO {
 
     private long id;
@@ -21,8 +22,8 @@ public class TaskOutputDTO {
     private String description;
     private TaskStatus status;
     private TaskPriority priority;
-    private LocalDateTime createdAt;
-    private LocalDateTime deadline;
+    private Timestamp createdAt;
+    private Timestamp deadline;
     private List<MyUserIdNameOutputDTO> developers;
     private List<CommentOutputDTO> comments;
 

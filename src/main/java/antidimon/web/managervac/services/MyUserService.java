@@ -19,7 +19,7 @@ public class MyUserService {
     private PasswordEncoder passwordEncoder;
 
     public MyUserOutputDTO saveUser(@Valid MyUserInputDTO myUserInputDTO) {
-        MyUser user = myUserMapper.toEnity(myUserInputDTO);
+        MyUser user = myUserMapper.toEntity(myUserInputDTO);
         this.encodeUserPassword(user);
         myUserRepository.save(user);
         MyUser updatedUser = myUserRepository.findById(user.getId()).get();
@@ -30,5 +30,9 @@ public class MyUserService {
 
     private void encodeUserPassword(MyUser user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+
+    public MyUser getUser(long userId) {
+        return myUserRepository.findById(userId).get();
     }
 }

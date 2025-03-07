@@ -7,7 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,8 +17,6 @@ import java.time.LocalDateTime;
 @Builder
 public class TaskInputDTO {
 
-    @NotNull
-    private long projectId;
     @NotBlank
     private String taskName;
     @NotBlank
@@ -27,6 +26,6 @@ public class TaskInputDTO {
     @NotNull
     private TaskPriority priority;
     @NotNull
-    private LocalDateTime deadline;
+    private Timestamp deadline;
 
 }

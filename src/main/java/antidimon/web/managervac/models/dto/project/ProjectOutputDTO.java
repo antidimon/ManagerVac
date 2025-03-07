@@ -4,7 +4,7 @@ import antidimon.web.managervac.models.dto.task.TaskOutputDTO;
 import antidimon.web.managervac.models.dto.user.MyUserIdNameOutputDTO;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 @NoArgsConstructor
@@ -12,11 +12,12 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 public class ProjectOutputDTO {
 
     private long id;
     private String name;
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
     private List<MyUserIdNameOutputDTO> members;
     private List<TaskOutputDTO> tasks;
 }

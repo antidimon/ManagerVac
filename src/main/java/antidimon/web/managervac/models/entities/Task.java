@@ -7,10 +7,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -46,10 +47,11 @@ public class Task implements Serializable {
     private TaskPriority priority;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    private Timestamp createdAt;
 
     @Column(name = "deadline", nullable = false)
-    private LocalDateTime deadline;
+    private Timestamp deadline;
 
     @ManyToMany
     @JoinTable(

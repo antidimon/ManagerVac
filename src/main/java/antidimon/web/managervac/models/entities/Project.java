@@ -6,10 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -31,7 +32,8 @@ public class Project implements Serializable {
     private String name;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    private Timestamp createdAt;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectMember> members;
