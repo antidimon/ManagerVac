@@ -77,12 +77,12 @@ public class ProjectService {
     }
 
     @Transactional
-    public void editProject(long projectId, String newName, long senderId) throws NoSuchElementException, SecurityException{
+    public ProjectOutputDTO editProject(long projectId, String newName, long senderId) throws NoSuchElementException, SecurityException{
         this.checkUserOwnProject(projectId, senderId);
         Project project = this.getProject(projectId);
         project.setName(newName);
         projectRepository.save(project);
-
+        return projectMapper.toOutputDTO(project);
     }
 
     @Transactional
@@ -111,8 +111,7 @@ public class ProjectService {
 
     protected void checkUserOwnProject(long projectId, long userId) throws SecurityException{
         Project project = this.getProject(projectId);
-        long ownerId = project.getMembers().stream()
-                .filter(member -> member.getRole().equals(Role.ADMIN)).findFirst().get().getUser().getId();
+        long ownerId = this.getProjectOwnerId(project);
         if (ownerId != userId) throw new SecurityException("Permission denied");
     }
 
@@ -142,4 +141,8 @@ public class ProjectService {
         }
     }
 
+    public long getProjectOwnerId(Project project) {
+        return project.getMembers().stream()
+                .filter(member -> member.getRole().equals(Role.ADMIN)).findFirst().get().getUser().getId();
+    }
 }

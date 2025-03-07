@@ -1,8 +1,9 @@
 package antidimon.web.managervac.models.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 @NoArgsConstructor
@@ -17,5 +18,6 @@ public class MyUserOutputDTO {
     private String username;
     private String email;
     private String password;
-    private Timestamp createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    private LocalDateTime createdAt;
 }

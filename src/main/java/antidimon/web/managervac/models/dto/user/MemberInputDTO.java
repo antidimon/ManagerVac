@@ -1,4 +1,4 @@
-package antidimon.web.managervac.models.dto.projectMember;
+package antidimon.web.managervac.models.dto.user;
 
 
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class ProjectMemberInputDTO {
+public class MemberInputDTO {
 
     @NotNull
     private long userId;

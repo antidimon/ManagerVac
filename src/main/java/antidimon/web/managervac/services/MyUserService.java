@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class MyUserService {
@@ -32,7 +35,9 @@ public class MyUserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
 
-    public MyUser getUser(long userId) {
-        return myUserRepository.findById(userId).get();
+    public MyUser getUser(long userId) throws NoSuchElementException {
+        Optional<MyUser> user = myUserRepository.findById(userId);
+        if (user.isPresent()) return user.get();
+        throw new NoSuchElementException("User not found");
     }
 }

@@ -22,11 +22,11 @@ public class ProjectMember implements Serializable {
     @EmbeddedId
     private ProjectMemberKey id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id", insertable = false, updatable = false)
     private Project project;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private MyUser user;
 
