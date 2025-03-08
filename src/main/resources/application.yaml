@@ -8,7 +8,6 @@ spring:
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
   flyway:
@@ -18,3 +17,14 @@ spring:
 
 
 jwt: ${TOKEN}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+  api-docs:
+    path: /v3/api-docs
+
+server:
+  servlet:
+    context-path: /

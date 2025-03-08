@@ -11,9 +11,14 @@ import antidimon.web.managervac.repositories.TaskRepository;
 import antidimon.web.managervac.utils.TaskValidator;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -59,20 +64,19 @@ public class TaskService {
             throws SecurityException, NoSuchElementException, IllegalArgumentException {
         projectService.checkUserOwnProject(projectId, senderId);
         Project project = projectService.getProject(projectId);
-        String errors = taskValidator.validate(taskInputDTO, project);
-        if (!errors.isEmpty()) throw new IllegalArgumentException(errors);
         Task task = taskMapper.toEntity(taskInputDTO);
+        String errors = taskValidator.validate(task, project);
+        if (!errors.isEmpty()) throw new IllegalArgumentException(errors);
         task.setProject(project);
         taskRepository.save(task);
         return taskMapper.toOutputDTO(task);
     }
 
     @Transactional
-    public TaskOutputDTO editTask(long taskId, TaskEditDTO taskEditDTO, long senderId)
+    public TaskOutputDTO editTask(long projectId, long taskId, TaskEditDTO taskEditDTO, long senderId)
             throws NoSuchElementException, SecurityException, BadRequestException {
+        projectService.checkUserMemberOfProject(projectId, senderId);
         Task task = this.getProjectTask(taskId);
-        projectService.checkUserMemberOfProject(task.getProject().getId(), senderId);
-
         long ownerId = projectService.getProjectOwnerId(task.getProject());
         boolean isUserCanEditTask = task.getDevelopers().stream().anyMatch(dev -> dev.getId() == senderId) || ownerId == senderId;
 
@@ -81,6 +85,8 @@ public class TaskService {
                 if (taskEditDTO.getStatus() == null)
                     throw new BadRequestException("Developers can only update status or write comments");
                 task.setStatus(taskEditDTO.getStatus());
+                String errors = taskValidator.validateStatus(task);
+                if (!errors.isEmpty()) throw new IllegalArgumentException(errors);
             }else {
                 task.setTaskName((taskEditDTO.getTaskName() == null || taskEditDTO.getTaskName().isEmpty()) ?
                         task.getTaskName() : taskEditDTO.getTaskName());
@@ -92,6 +98,8 @@ public class TaskService {
                         task.getDescription() : taskEditDTO.getDescription());
                 task.setDeadline((taskEditDTO.getDeadline() == null) ?
                         task.getDeadline() : taskEditDTO.getDeadline());
+                String errors = taskValidator.validate(task, task.getProject());
+                if (!errors.isEmpty()) throw new IllegalArgumentException(errors);
             }
             taskRepository.save(task);
             return taskMapper.toOutputDTO(task);
@@ -144,4 +152,15 @@ public class TaskService {
         if (!flag) throw new SecurityException("Permission denied");
     }
 
+    public Page<TaskOutputDTO> getUserTasks(long senderId, int page, int size, boolean isAsc, Long projectId) {
+        Sort sort = isAsc ? Sort.by("deadline").ascending() : Sort.by("deadline").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Task> tasks;
+        if (projectId != null) {
+            tasks = taskRepository.findByUserIdAndProjectId(senderId, projectId, pageable);
+        } else {
+            tasks = taskRepository.findByUserId(senderId, pageable);
+        }
+        return tasks.map(taskMapper::toOutputDTO);
+    }
 }

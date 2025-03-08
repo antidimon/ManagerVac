@@ -1,7 +1,7 @@
-package antidimon.web.managervac.security;
+package antidimon.web.managervac.config;
 
 
-import antidimon.web.managervac.repositories.MyUserRepository;
+import antidimon.web.managervac.security.CustomUserDetailsService;
 import antidimon.web.managervac.security.jwt.JwtFilter;
 import antidimon.web.managervac.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +33,9 @@ public class Config {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
+                    registry.requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/**").permitAll();
                     registry.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll();
                     registry.anyRequest().authenticated();})
-//                .formLogin(httpSecurityFormLoginConfigurer -> {
-//                    httpSecurityFormLoginConfigurer
-//                            .loginPage("/api/auth/login")
-//                            .usernameParameter("email")
-//                            .passwordParameter("password")
-//                            .successHandler(new AuthSuccessHandler(jwtTokenUtil))
-//                            .permitAll();
-//                })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtFilter(jwtTokenUtil, myUserDetailsService), UsernamePasswordAuthenticationFilter.class)
                 .build();

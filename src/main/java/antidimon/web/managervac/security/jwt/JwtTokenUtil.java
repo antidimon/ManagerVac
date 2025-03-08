@@ -27,7 +27,7 @@ public class JwtTokenUtil {
     private final MyUserRepository myUserRepository;
     @Value("${jwt}")
     private String secret;
-    private static final long VALIDITY = TimeUnit.HOURS.toMillis(1);
+    private static final long VALIDITY = TimeUnit.HOURS.toMillis(3);
 
     public JwtTokenUtil(MyUserRepository myUserRepository) {
         this.myUserRepository = myUserRepository;
