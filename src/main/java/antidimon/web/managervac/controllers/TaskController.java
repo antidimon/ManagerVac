@@ -32,7 +32,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskOutputDTO> getProjectTask(@RequestHeader("Authorization") String jwt,
+    public ResponseEntity<TaskOutputDTO> getTask(@RequestHeader("Authorization") String jwt,
                                             @PathVariable long projectId,
                                             @PathVariable long id) {
         long senderId = jwtTokenUtil.getId(jwt);
@@ -51,7 +51,6 @@ public class TaskController {
     @PatchMapping("/{id}")
     public ResponseEntity<TaskOutputDTO> editTask(@RequestHeader("Authorization") String jwt,
                                                   @RequestBody TaskEditDTO taskEditDTO,
-                                                  @PathVariable long projectId,
                                                   @PathVariable long id) throws BadRequestException {
         long senderId = jwtTokenUtil.getId(jwt);
         var task = taskService.editTask(id, taskEditDTO, senderId);

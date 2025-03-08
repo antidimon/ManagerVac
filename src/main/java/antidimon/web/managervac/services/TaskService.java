@@ -8,6 +8,7 @@ import antidimon.web.managervac.models.entities.MyUser;
 import antidimon.web.managervac.models.entities.Project;
 import antidimon.web.managervac.models.entities.Task;
 import antidimon.web.managervac.repositories.TaskRepository;
+import antidimon.web.managervac.utils.TaskValidator;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TaskService {
 
+    private final TaskValidator taskValidator;
     private TaskRepository taskRepository;
     private ProjectService projectService;
     private TaskMapper taskMapper;
@@ -54,9 +56,11 @@ public class TaskService {
 
     @Transactional
     public TaskOutputDTO createTask(long projectId, TaskInputDTO taskInputDTO, long senderId)
-            throws SecurityException, NoSuchElementException {
+            throws SecurityException, NoSuchElementException, IllegalArgumentException {
         projectService.checkUserOwnProject(projectId, senderId);
         Project project = projectService.getProject(projectId);
+        String errors = taskValidator.validate(taskInputDTO, project);
+        if (!errors.isEmpty()) throw new IllegalArgumentException(errors);
         Task task = taskMapper.toEntity(taskInputDTO);
         task.setProject(project);
         taskRepository.save(task);
@@ -132,4 +136,12 @@ public class TaskService {
         task.getDevelopers().remove(user);
         taskRepository.save(task);
     }
+
+    public void checkUserDevelopTask(long taskId, long userId) throws SecurityException {
+        Task task = this.getProjectTask(taskId);
+        boolean flag = task.getDevelopers().stream().anyMatch(dev -> dev.getId() == userId) ||
+                projectService.getProjectOwnerId(task.getProject()) == userId;
+        if (!flag) throw new SecurityException("Permission denied");
+    }
+
 }

@@ -9,7 +9,9 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -21,6 +23,7 @@ public class MyUserService {
     private MyUserMapper myUserMapper;
     private PasswordEncoder passwordEncoder;
 
+    @Transactional
     public MyUserOutputDTO saveUser(@Valid MyUserInputDTO myUserInputDTO) {
         MyUser user = myUserMapper.toEntity(myUserInputDTO);
         this.encodeUserPassword(user);
@@ -39,5 +42,19 @@ public class MyUserService {
         Optional<MyUser> user = myUserRepository.findById(userId);
         if (user.isPresent()) return user.get();
         throw new NoSuchElementException("User not found");
+    }
+
+    public MyUserOutputDTO getUserDTO(long userId) throws NoSuchElementException {
+        MyUser user = this.getUser(userId);
+        return myUserMapper.toOutputDTO(user);
+    }
+
+    public List<MyUser> getUsers(){
+        return myUserRepository.findAll();
+    }
+
+    public List<MyUserOutputDTO> getUsersDTO() {
+        var users = this.getUsers();
+        return users.stream().map(myUserMapper::toOutputDTO).toList();
     }
 }
