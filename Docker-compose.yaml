@@ -12,10 +12,6 @@ services:
     depends_on:
       db:
         condition: service_started
-    environment:
-      - DB_SERVER=db
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/managervac
-      - SERVER_PORT=${MAIN_PORT}
     volumes:
       - ../ManagerVac/src/main/java/antidimon/web/managervac:/app/src/main/java/antidimon/web/managervac
     networks:

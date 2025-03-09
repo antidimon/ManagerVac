@@ -1,10 +1,10 @@
 FROM maven:3.8.4-openjdk-17 as builder
-WORKDIR /app
-COPY . /app/.
-RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip=false
+WORKDIR /manager
+COPY . /manager/.
+RUN mvn -f /manager/pom.xml clean package -Dmaven.test.skip=false
 
 FROM eclipse-temurin:17-jre-alpine
-WORKDIR /app
-COPY --from=builder /app/target/*.jar /app/*.jar
+WORKDIR /manager
+COPY --from=builder /target/*.jar /manager/*.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/*.jar"]
+ENTRYPOINT ["java", "-jar", "/manager/*.jar"]

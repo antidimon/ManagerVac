@@ -1,9 +1,8 @@
 spring:
-
   datasource:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    url:
+    url: ${DOCKER_DB_URL}
 
   jpa:
     properties:
@@ -28,4 +27,4 @@ springdoc:
 server:
   servlet:
     context-path: /
-  port: ${SERVER_PORT}
+  port: 8080
