@@ -1,10 +1,10 @@
 spring:
-  profiles:
-    active: local
 
   datasource:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    url:
+
   jpa:
     properties:
       hibernate:
@@ -28,3 +28,4 @@ springdoc:
 server:
   servlet:
     context-path: /
+  port: ${SERVER_PORT}

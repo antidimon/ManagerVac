@@ -32,7 +32,6 @@ public class ProjectService {
     private ProjectRepository projectRepository;
     private ProjectMemberRepository projectMemberRepository;
     private ProjectMapper projectMapper;
-    private TaskMapper taskMapper;
 
     public Project getProject(long projectId) throws NoSuchElementException {
         Optional<Project> project = this.projectRepository.findById(projectId);
@@ -109,13 +108,13 @@ public class ProjectService {
         return projectMember;
     }
 
-    protected void checkUserOwnProject(long projectId, long userId) throws SecurityException{
+    public void checkUserOwnProject(long projectId, long userId) throws SecurityException{
         Project project = this.getProject(projectId);
         long ownerId = this.getProjectOwnerId(project);
         if (ownerId != userId) throw new SecurityException("Permission denied");
     }
 
-    protected void checkUserMemberOfProject(long projectId, long userId) throws SecurityException{
+    public void checkUserMemberOfProject(long projectId, long userId) throws SecurityException{
         Project project = this.getProject(projectId);
         boolean flag = project.getMembers().stream()
                 .anyMatch(member -> member.getId().getUserId() == userId);

@@ -1,0 +1,48 @@
+services:
+  backend:
+    env_file:
+      - .env
+    container_name: backend
+    image: backend:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${MAIN_PORT}:${MAIN_PORT}"
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      - DB_SERVER=db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/managervac
+      - SERVER_PORT=${MAIN_PORT}
+    volumes:
+      - ../ManagerVac/src/main/java/antidimon/web/managervac:/app/src/main/java/antidimon/web/managervac
+    networks:
+      - spring-postgres
+
+
+  db:
+    env_file:
+      - .env
+    container_name: db
+    hostname: db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - db-data:/var/lib/postgresql@17/data:rw
+    restart: unless-stopped
+    networks:
+      - spring-postgres
+
+volumes:
+  db-data:
+
+networks:
+  spring-postgres:
+    driver: bridge

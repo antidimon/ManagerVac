@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Project implements Serializable {
+public class Project implements Serializable, Cloneable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -42,5 +43,14 @@ public class Project implements Serializable {
     private List<Task> tasks;
 
 
+    @Override
+    public Project clone() throws CloneNotSupportedException {
+        Project cloned = (Project) super.clone();
+
+        cloned.members = this.members != null ? new ArrayList<>(this.members) : new ArrayList<>();
+        cloned.tasks = this.tasks != null ? new ArrayList<>(this.tasks) : new ArrayList<>();
+
+        return cloned;
+    }
 
 }

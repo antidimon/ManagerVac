@@ -5,6 +5,7 @@ import antidimon.web.managervac.security.CustomUserDetailsService;
 import antidimon.web.managervac.security.jwt.JwtFilter;
 import antidimon.web.managervac.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
