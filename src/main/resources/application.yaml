@@ -1,8 +1,9 @@
 spring:
+
   datasource:
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    url: ${DOCKER_DB_URL}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5555}/ManagerVac
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
 
   jpa:
     properties:
@@ -13,7 +14,6 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-
 
 jwt: ${TOKEN}
 
@@ -27,4 +27,4 @@ springdoc:
 server:
   servlet:
     context-path: /
-  port: 8080
+  port: ${PORT}

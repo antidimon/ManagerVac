@@ -1,44 +1,46 @@
-services:
-  backend:
-    env_file:
-      - .env
-    container_name: backend
-    image: backend:0.0.1
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "${MAIN_PORT}:${MAIN_PORT}"
-    depends_on:
-      db:
-        condition: service_started
-    volumes:
-      - ../ManagerVac/src/main/java/antidimon/web/managervac:/app/src/main/java/antidimon/web/managervac
-    networks:
-      - spring-postgres
-
-
-  db:
-    env_file:
-      - .env
-    container_name: db
-    hostname: db
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
-      - db-data:/var/lib/postgresql@17/data:rw
-    restart: unless-stopped
-    networks:
-      - spring-postgres
-
-volumes:
-  db-data:
+version: '3.8'
 
 networks:
   spring-postgres:
     driver: bridge
+
+services:
+
+  back:
+    env_file:
+      - .env
+    container_name: back
+    image: back:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    networks:
+      - spring-postgres
+
+
+
+  postgres:
+    env_file:
+      - .env
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    volumes:
+      - ./db:/var/lib/postgresql
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    networks:
+      - spring-postgres
