@@ -67,8 +67,8 @@ public class AuthController {
                 description = "Аутентификация и возврат JWT токена пользователю")
     @ApiResponse(responseCode = "200", description = "Аутентификация успешна",
             content = @Content(mediaType = "application/json",
-                    examples = {@ExampleObject(name = "Success", value = "\n" +
-                    "  \"token\": \"nco3bublhbo38q5btq4wt3jbvqvtuiq\"\n" +
+                    examples = {@ExampleObject(name = "Success",
+                            value = " \"token\": \"nco3bublhbo38q5btq4wt3jbvqvtuiq\"" +
                     "}")}))
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
